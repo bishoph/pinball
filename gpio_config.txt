@@ -1,0 +1,28 @@
+PIN	 | LK 	| TYPE 	| Desc
+
+03	 | 1 	| IN	| Flipper button right
+05	 | 2 	| IN	| Flipper button left
+08	 | 3	| IN	| Flipper finger EOS right
+10	 | 4	| IN	| Flipper finger EOS left
+07	 | 5	| IN	| 
+11	 | 6	| OUT	| Flipper finger right HIGH (Relay #1,1) IN
+12	 | 7	| OUT	| Flipper finger right HOLD (Relay #1,2) IN2
+13	 | 8	| OUT	| Flipper finger left HIGH (Relay #2,1) IN
+15	 | 9	| OUT	| Flipper finger left HOLD (Relay #2,2) IN2
+16	 | 10	| IN 	| Shooter alley micro switch
+18	 | 11	| IN	| 
+19	 | 12	| IN	| 
+21	 | 13	| IN	| 
+22	 | 14 	| IN	| 
+23	 | 15	| IN	| 
+24	 | 16	| IN 	| 
+26	 | 17	| OUT 	| 
+29	 | 18	| OUT 	| 
+31	 | 19	| OUT	| 
+32	 | 20	| OUT	| LICHT #1 (Relay #3,1)
+33	 | 21	| OUT	| LICHT #2 (Relay #3,2)
+35	 | 22	| OUT	| 
+36	 | 23	| OUT 	| 
+37	 | 24	| IN 	| outlane micro switches, one signal!
+38	 | 25 	| IN 	| 
+40	 | 26	| IN	| 
