@@ -18,14 +18,17 @@ e={
    'slingshot_1': [ 1,1,1,0,0,1,1,1,0,0,1,1,0,0,1,1,0,0,1,1 ],
    'slingshot_2': [ 1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,0,0,1,1 ],
    'blink_1': [ 1,1,1,0,0,1,1,0,0,1,0,1,0,1,0,1,1,0,0,1,1,1,0,0,0 ],
-   'blink_2': [ 1,1,0,0,1,1,1,0,0,0,1,0,1,0,1,1,0,1,1,1,0,0,0,1,0]
+   'blink_2': [ 1,1,0,0,1,1,1,0,0,0,1,0,1,0,1,1,0,1,1,1,0,0,0,1,0 ]
   }
 
 def geteffect(id):
  if (id in e):
+  print('effect : '+id)
   return e[id]
  else:
   return []
 
 def getrandomeffect():
- return e[random.sample(e, 1)[0]]
+ id=random.sample(e,1)[0]
+ print('effect : '+id)
+ return e[id]
