@@ -89,7 +89,7 @@ LIGHT_2_STATUS=False
 
 
 light_control_1=lights.control(1, False, 90)
-light_control_2=lights.control(2, False, 50)
+light_control_2=lights.control(2, False, 70)
 
 # this is our main loop and loops forever
 while True:
