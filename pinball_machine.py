@@ -13,6 +13,7 @@
 import time
 import RPi.GPIO as GPIO
 import lights
+import sounds
 import effects
 
 # SLEEP/WAIT TIME FOR LOOP
@@ -87,9 +88,16 @@ FLIPPER_FINGER_HIGH_COOLDOWN_LEFT=0
 LIGHT_1_STATUS=False
 LIGHT_2_STATUS=False
 
+print ('light and sound init ...')
 
+# light init (ID, default_state, timer_for_random_effects)
 light_control_1=lights.control(1, False, 90)
 light_control_2=lights.control(2, False, 70)
+
+# sound init to play sound
+sound_control=sounds.control(effects.getsoundeffect('startup'))
+
+print (' ... done')
 
 # this is our main loop and loops forever
 while True:
@@ -145,10 +153,12 @@ while True:
   print('shooter alley')
   light_control_1.seteffect(effects.geteffect('shooter_alley_1'))
   light_control_2.seteffect(effects.geteffect('slingshot_1'))
+  sound_control.playsound(effects.getsoundeffect('shooter_alley'))
  if (input_state_37 == False):
   print('ball out')
   light_control_1.seteffect(effects.geteffect('shooter_alley_2'))
   light_control_2.seteffect(effects.geteffect('slingshot_2'))
+  sound_control.playsound(effects.getsoundeffect('outlane'))
 
  # lights and magic
  LIGHT_1_STATUS=light_control_1.getstate()
