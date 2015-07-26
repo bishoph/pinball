@@ -18,13 +18,16 @@
 # and reboot to make the sound work
 
 import pygame
-import time
+import effects
 
 class control:
+
+    counter=0
 
     def __init__(self, init_sounds):
      pygame.init()
      pygame.mixer.init()
+     self.counter=0
      self.playsound(init_sounds)
 
     def playsound(self, files):
@@ -34,3 +37,16 @@ class control:
        pygame.mixer.music.queue(files[a])
      pygame.mixer.music.play()
 
+    def checksilence(self):
+     if (pygame.mixer.music.get_busy() == False):
+      if (self.counter >= 2000):
+       self.playsound(effects.getrandomsoundeffect())
+       self.counter=0
+      else:
+       self.counter=self.counter+1
+
+    # this is to play sound effects on top of the background music
+    def playeffect(self, effect):
+     print (effect[0])
+     e = pygame.mixer.Sound(effect[0])
+     pygame.mixer.Sound.play(e)

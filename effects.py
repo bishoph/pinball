@@ -14,22 +14,36 @@ import random
 
 e={
    'shooter_alley_1': [ 0,0,0,1,1,1,0,0,1,1,0,1,0,1,0,1,1,1,1,0 ],
-   'shooter_alley_2': [ 1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,1,0,1,0,1 ],
    'slingshot_1': [ 1,1,1,0,0,1,1,1,0,0,1,1,0,0,1,1,0,0,1,1 ],
-   'slingshot_2': [ 1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,0,0,1,1 ],
   }
 
 e2={
    'blink_1': [ 1,1,1,0,0,1,1,0,0,1,0,1,0,1,0,1,1,0,0,1,1,1,0,0,0 ],
-   'blink_2': [ 1,1,0,0,1,1,1,0,0,0,1,0,1,0,1,1,0,1,1,1,0,0,0,1,0 ]
+   'blink_2': [ 1,1,0,0,1,1,1,0,0,0,1,0,1,0,1,1,0,1,1,1,0,0,0,1,0 ],
+   'blink_3': [ 1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,1,0,1,0,1,0,1,0,1,0 ],
+   'blink_4': [ 1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,0,0,1,1,1,0,1,1,0 ]
   }
 
 s={
-   'startup': [ 'sounds/alarm_long.mp3', 'sounds/thunder.mp3' ],
-   'shooter_alley': [ 'sounds/laser_beam.mp3' ],
-   'outlane': [ 'sounds/shutdown.mp3' ]
+   'startup': [ 'sounds/alarm_long.mp3' ],
+   'shooter_alley': [ 'sounds/laser_beam.ogg' ],
+   'outlane': [ 'sounds/shutdown.ogg' ]
   }
 
+s2={
+   'spooky': [ 'sounds/spooky.mp3' ],
+   'choir': [ 'sounds/choir.mp3' ],
+   'sorry': [ 'sounds/oh_sorry.mp3' ],
+   'try': [ 'sounds/one_must_try.mp3' ],
+   'giggle': [ 'sounds/giggle.mp3' ],
+   'meh': [ 'sounds/meh.mp3' ],
+   'uuuuhhhh': [ 'sounds/uuuuhhhh.mp3' ],
+   'piano': [ 'sounds/piano.mp3' ],
+   'explosion': [ 'sounds/explosion.mp3' ],
+   'witch': [ 'sounds/witch.mp3' ],
+   'wee_wee': [ 'sounds/wee_wee.mp3' ],
+   'sacrifice': [ 'sounds/sacrifice.mp3' ]
+  }
 
 def geteffect(id):
  if (id in e):
@@ -49,3 +63,9 @@ def getsoundeffect(id):
   return s[id]
  else:
   return []
+
+def getrandomsoundeffect():
+ id=random.sample(s2,1)[0]
+ print('sound effect : '+id)
+ return s2[id]
+
