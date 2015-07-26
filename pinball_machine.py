@@ -151,13 +151,13 @@ while True:
  # switches and effects
  if (input_state_16 == False):
   print('shooter alley')
-  light_control_1.seteffect(effects.geteffect('shooter_alley_1'))
-  light_control_2.seteffect(effects.geteffect('slingshot_1'))
+  light_control_1.seteffect(effects.geteffect('shooter_1'))
+  light_control_2.seteffect(effects.geteffect('shooter_2'))
   sound_control.playeffect(effects.getsoundeffect('shooter_alley'))
  if (input_state_37 == False):
   print('ball out')
-  light_control_1.seteffect(effects.geteffect('shooter_alley_2'))
-  light_control_2.seteffect(effects.geteffect('slingshot_2'))
+  light_control_1.seteffect(effects.geteffect('out_1'))
+  light_control_2.seteffect(effects.geteffect('out_1'))
   sound_control.playeffect(effects.getsoundeffect('outlane'))
 
  # lights and magic
