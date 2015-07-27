@@ -16,6 +16,9 @@ import lights
 import sounds
 import effects
 
+# SCORE
+SCORE=0
+
 # SLEEP/WAIT TIME FOR LOOP
 SLEEP=0.005
 
@@ -33,6 +36,8 @@ FLIPPER_FINGER_BUTTON_RIGHT=3
 FLIPPER_FINGER_BUTTON_LEFT=5
 FLIPPER_FINGER_EOS_RIGHT=8
 FLIPPER_FINGER_EOS_LEFT=10
+
+SPINNER=7
 
 SHOOTER_ALLEY=16
 OUTHOLE=37
@@ -55,6 +60,7 @@ GPIO.setup(FLIPPER_FINGER_EOS_RIGHT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(FLIPPER_FINGER_BUTTON_LEFT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(FLIPPER_FINGER_EOS_LEFT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
+GPIO.setup(SPINNER, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(SHOOTER_ALLEY, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(OUTHOLE, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
@@ -85,6 +91,9 @@ FLIPPER_FINGER_HIGH_ACTIVE_LEFT=False
 FLIPPER_FINGER_HOLD_ACTIVE_LEFT=False
 FLIPPER_FINGER_HIGH_COOLDOWN_LEFT=0
 
+SPINNER_SOUND_COOLDOWN=0
+SPINNER_SOUND_COOLDOWN_TIMER=0.3
+
 LIGHT_1_STATUS=False
 LIGHT_2_STATUS=False
 
@@ -108,8 +117,12 @@ while True:
  # left flipper finger input (button + eos)
  input_state_5 = GPIO.input(FLIPPER_FINGER_BUTTON_LEFT)
  input_state_10 = GPIO.input(FLIPPER_FINGER_EOS_LEFT)
+
+ # spinner
+ input_state_7 = GPIO.input(SPINNER)
  # shooter alley
  input_state_16 = GPIO.input(SHOOTER_ALLEY)
+ # outhole
  input_state_37 = GPIO.input(OUTHOLE)
 
  # LOGIC SECTION
@@ -149,6 +162,12 @@ while True:
   FLIPPER_FINGER_HOLD_ACTIVE_LEFT=True
 
  # switches and effects
+ if (input_state_7 == False):
+  SCORE=SCORE+10
+  if (SPINNER_SOUND_COOLDOWN <= time.time()):
+   light_control_1.seteffect(effects.geteffect('spinner'))
+   sound_control.playeffect(effects.getsoundeffect('spinner'))
+   SPINNER_SOUND_COOLDOWN = time.time()+SPINNER_SOUND_COOLDOWN_TIMER
  if (input_state_16 == False):
   print('shooter alley')
   light_control_1.seteffect(effects.geteffect('shooter_1'))

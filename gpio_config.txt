@@ -4,7 +4,7 @@ PIN	 | LK 	| TYPE 	| Desc
 05	 | 2 	| IN	| Flipper button left
 08	 | 3	| IN	| Flipper finger EOS right
 10	 | 4	| IN	| Flipper finger EOS left
-07	 | 5	| IN	| 
+07	 | 5	| IN	| Spinner micro switch
 11	 | 6	| OUT	| Flipper finger right HIGH (Relay #1,1) IN
 12	 | 7	| OUT	| Flipper finger right HOLD (Relay #1,2) IN2
 13	 | 8	| OUT	| Flipper finger left HIGH (Relay #2,1) IN
@@ -23,6 +23,6 @@ PIN	 | LK 	| TYPE 	| Desc
 33	 | 21	| OUT	| LICHT #2 (Relay #3,2)
 35	 | 22	| OUT	| 
 36	 | 23	| OUT 	| 
-37	 | 24	| IN 	| outlane micro switches, one signal!
+37	 | 24	| IN 	| Outlane micro switches, one signal!
 38	 | 25 	| IN 	| 
 40	 | 26	| IN	| 

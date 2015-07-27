@@ -15,7 +15,8 @@ import random
 e={
    'shooter_1': [ 0,0,0,1,1,1,0,0,1,1,0,1,0,1,0,1,1,1,1,0 ],
    'shooter_2': [ 1,1,1,0,0,1,1,1,0,0,1,1,0,0,1,1,0,0,1,1 ],
-   'out_1': [ 0,1,0,1,0,1,0,0,1,1,0,0,1,1,1,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,1,0 ]
+   'out_1': [ 0,1,0,1,0,1,0,0,1,1,0,0,1,1,1,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,1,0 ],
+   'spinner': [ 1,0 ]
   }
 
 e2={
@@ -28,7 +29,8 @@ e2={
 s={
    'startup': [ 'sounds/alarm_long.mp3' ],
    'shooter_alley': [ 'sounds/laser_beam.ogg' ],
-   'outlane': [ 'sounds/shutdown.ogg' ]
+   'outlane': [ 'sounds/shutdown.ogg' ],
+   'spinner' : ['sounds/deskbell.ogg' ]
   }
 
 s2={
