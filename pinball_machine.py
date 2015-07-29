@@ -11,6 +11,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 
 import time
+import multiprocessing
 import RPi.GPIO as GPIO
 import lights
 import sounds
@@ -31,11 +32,21 @@ SLEEP=0.005
 # works pretty well.
 FLIPPER_HIGH_MAX=0.04
 
+# bumper timeout
+# Value defines the max. time high current flows
+BUMPER_HIGH=0.04
+
+# Normal event cool down timer, prevents events to be fired
+# continuously when something went mechanically wrong
+EVENT_COOLDOWN_TIMER=2
+
 # INPUT (GPIO Pin)
 FLIPPER_FINGER_BUTTON_RIGHT=3
 FLIPPER_FINGER_BUTTON_LEFT=5
 FLIPPER_FINGER_EOS_RIGHT=8
 FLIPPER_FINGER_EOS_LEFT=10
+
+BUMPER_1=22
 
 SPINNER=7
 
@@ -48,8 +59,11 @@ FLIPPER_FINGER_HOLD_RIGHT=12
 FLIPPER_FINGER_HIGH_LEFT=13
 FLIPPER_FINGER_HOLD_LEFT=15
 
+BUMPER_1_HIGH=26
+
 LIGHT_1=32
 LIGHT_2=33
+LIGHT_3=35
 
 # MODE (GPIO Pin)
 GPIO.setmode(GPIO.BOARD)
@@ -59,6 +73,8 @@ GPIO.setup(FLIPPER_FINGER_BUTTON_RIGHT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(FLIPPER_FINGER_EOS_RIGHT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(FLIPPER_FINGER_BUTTON_LEFT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(FLIPPER_FINGER_EOS_LEFT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+GPIO.setup(BUMPER_1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 GPIO.setup(SPINNER, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(SHOOTER_ALLEY, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -70,8 +86,11 @@ GPIO.setup(FLIPPER_FINGER_HOLD_RIGHT, GPIO.OUT)
 GPIO.setup(FLIPPER_FINGER_HIGH_LEFT, GPIO.OUT)
 GPIO.setup(FLIPPER_FINGER_HOLD_LEFT, GPIO.OUT)
 
+GPIO.setup(BUMPER_1_HIGH, GPIO.OUT)
+
 GPIO.setup(LIGHT_1, GPIO.OUT)
 GPIO.setup(LIGHT_2, GPIO.OUT)
+GPIO.setup(LIGHT_3, GPIO.OUT)
 
 # DEFAUTs
 GPIO.output(FLIPPER_FINGER_HIGH_RIGHT, False)
@@ -79,8 +98,11 @@ GPIO.output(FLIPPER_FINGER_HOLD_RIGHT, False)
 GPIO.output(FLIPPER_FINGER_HIGH_LEFT, False)
 GPIO.output(FLIPPER_FINGER_HOLD_LEFT, False)
 
+GPIO.output(BUMPER_1_HIGH, False)
+
 GPIO.output(LIGHT_1, False)
 GPIO.output(LIGHT_2, False)
+GPIO.output(LIGHT_3, False)
 
 # VARIABLES
 FLIPPER_FINGER_HIGH_ACTIVE_RIGHT=False
@@ -91,20 +113,33 @@ FLIPPER_FINGER_HIGH_ACTIVE_LEFT=False
 FLIPPER_FINGER_HOLD_ACTIVE_LEFT=False
 FLIPPER_FINGER_HIGH_COOLDOWN_LEFT=0
 
+BUMPER_1_ACTIVE=False
+BUMPER_1_HIGH_COOLDOWN=0
+BUMPER_1_COOLDOWN=0
+BUMPER_1_COOLDOWN_TIMER=0.5
+
 SPINNER_SOUND_COOLDOWN=0
 SPINNER_SOUND_COOLDOWN_TIMER=0.3
 
+SHOOTER_ALLEY_COOLDOWN=0
+OUTHOLE_COOLDOWN=0
+
 LIGHT_1_STATUS=False
 LIGHT_2_STATUS=False
+LIGHT_3_STATUS=False
+
+# Queue init for multiprocessing communication
+queue = multiprocessing.Queue()
 
 print ('light and sound init ...')
 
 # light init (ID, default_state, timer_for_random_effects)
 light_control_1=lights.control(1, False, 90)
 light_control_2=lights.control(2, False, 70)
+light_control_3=lights.control(3, False, 150)
 
 # sound init to play sound
-sound_control=sounds.control(effects.getsoundeffect('startup'))
+sound_control=sounds.control(queue, effects.getsoundeffect('startup'))
 
 print (' ... done')
 
@@ -117,6 +152,9 @@ while True:
  # left flipper finger input (button + eos)
  input_state_5 = GPIO.input(FLIPPER_FINGER_BUTTON_LEFT)
  input_state_10 = GPIO.input(FLIPPER_FINGER_EOS_LEFT)
+
+ # bumper input
+ input_state_22 = GPIO.input(BUMPER_1)
 
  # spinner
  input_state_7 = GPIO.input(SPINNER)
@@ -161,6 +199,18 @@ while True:
   FLIPPER_FINGER_HIGH_ACTIVE_LEFT=False
   FLIPPER_FINGER_HOLD_ACTIVE_LEFT=True
 
+ if (input_state_22 == False and BUMPER_1_ACTIVE == False and BUMPER_1_COOLDOWN <=time.time()):
+  print ('bumper 1 activated')
+  SCORE=SCORE+50
+  BUMPER_1_ACTIVE=True
+  BUMPER_1_HIGH_COOLDOWN=time.time()+BUMPER_HIGH
+  BUMPER_1_COOLDOWN=time.time()+BUMPER_1_COOLDOWN_TIMER
+  light_control_3.seteffect(effects.geteffect('bumper'))
+ if ((input_state_22 == True and BUMPER_1_ACTIVE == True) or (BUMPER_1_HIGH_COOLDOWN > 0 and BUMPER_1_HIGH_COOLDOWN <= time.time())):
+  print ('bumper 1 offline')
+  BUMPER_1_ACTIVE=False
+  BUMPER_1_HIGH_COOLDOWN=0
+
  # switches and effects
  if (input_state_7 == False):
   SCORE=SCORE+10
@@ -168,20 +218,23 @@ while True:
    light_control_1.seteffect(effects.geteffect('spinner'))
    sound_control.playeffect(effects.getsoundeffect('spinner'))
    SPINNER_SOUND_COOLDOWN = time.time()+SPINNER_SOUND_COOLDOWN_TIMER
- if (input_state_16 == False):
+ if (input_state_16 == False and SHOOTER_ALLEY_COOLDOWN <= time.time()):
   print('shooter alley')
   light_control_1.seteffect(effects.geteffect('shooter_1'))
   light_control_2.seteffect(effects.geteffect('shooter_2'))
   sound_control.playeffect(effects.getsoundeffect('shooter_alley'))
- if (input_state_37 == False):
+  SHOOTER_ALLEY_COOLDOWN = time.time()+EVENT_COOLDOWN_TIMER
+ if (input_state_37 == False and OUTHOLE_COOLDOWN <= time.time()):
   print('ball out')
   light_control_1.seteffect(effects.geteffect('out_1'))
   light_control_2.seteffect(effects.geteffect('out_1'))
   sound_control.playeffect(effects.getsoundeffect('outlane'))
+  OUTHOLE_COOLDOWN = time.time()+EVENT_COOLDOWN_TIMER
 
  # lights and magic
  LIGHT_1_STATUS=light_control_1.getstate()
  LIGHT_2_STATUS=light_control_2.getstate()
+ LIGHT_3_STATUS=light_control_3.getstate()
 
  sound_control.checksilence()
 
@@ -211,6 +264,12 @@ while True:
  else:
   GPIO.output(FLIPPER_FINGER_HOLD_LEFT, False)
 
+ # bumper 1
+ if (BUMPER_1_ACTIVE == True):
+  GPIO.output(BUMPER_1_HIGH, True)
+ else:
+  GPIO.output(BUMPER_1_HIGH, False)
+
  # light 1
  if (LIGHT_1_STATUS == True):
   GPIO.output(LIGHT_1, True)
@@ -222,6 +281,12 @@ while True:
   GPIO.output(LIGHT_2, True)
  else:
   GPIO.output(LIGHT_2, False)
+
+ # light 3
+ if (LIGHT_3_STATUS == True):
+  GPIO.output(LIGHT_3, True)
+ else:
+  GPIO.output(LIGHT_3, False)
 
  time.sleep(SLEEP)
 

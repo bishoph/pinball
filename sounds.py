@@ -17,18 +17,32 @@
 # /boot/config.txt 
 # and reboot to make the sound work
 
+import multiprocessing
 import pygame
 import effects
 
-class control:
+class control(multiprocessing.Process):
 
+    RUNNING=True
     counter=0
 
-    def __init__(self, init_sounds):
+    def __init__(self, queue, init_sounds):
+     multiprocessing.Process.__init__(self, name="sound control")
+     self.queue = queue
      pygame.init()
      pygame.mixer.init()
      self.counter=0
      self.playsound(init_sounds)
+     self.start()
+
+    def run(self):
+     while self.RUNNING:
+      master_process_input = self.queue.get()
+
+     self.queue.close()
+
+    def stop(self):
+     self.RUNNING=False
 
     def playsound(self, files):
      if (len(files) >= 0):
