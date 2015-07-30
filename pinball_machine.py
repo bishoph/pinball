@@ -28,13 +28,14 @@ SLEEP=0.005
 # depending on resistors/diodes and coils you may
 # need higher values but beware to not burn the coil
 # or other components like Solid State Relays (SSR).
-# For my environment with a FL-11630 0.04 seconds
+# For my environment with a FL-11630 0.04-0.06 seconds
 # works pretty well.
-FLIPPER_HIGH_MAX=0.04
+FLIPPER_HIGH_MAX_LEFT=0.05
+FLIPPER_HIGH_MAX_RIGHT=0.05
 
 # bumper timeout
 # Value defines the max. time high current flows
-BUMPER_HIGH=0.04
+BUMPER_HIGH=0.05
 
 # Normal event cool down timer, prevents events to be fired
 # continuously when something went mechanically wrong
@@ -59,7 +60,7 @@ FLIPPER_FINGER_HOLD_RIGHT=12
 FLIPPER_FINGER_HIGH_LEFT=13
 FLIPPER_FINGER_HOLD_LEFT=15
 
-BUMPER_1_HIGH=26
+BUMPER_1_HIGH=38
 
 LIGHT_1=32
 LIGHT_2=33
@@ -143,6 +144,9 @@ sound_control=sounds.control(queue, effects.getsoundeffect('startup'))
 
 print (' ... done')
 
+a=0
+aa=time.time()
+
 # this is our main loop and loops forever
 while True:
 
@@ -168,7 +172,7 @@ while True:
   # KICK the right flipper finger hard
   print('Flipper Finger Button right pressed')
   FLIPPER_FINGER_HIGH_ACTIVE_RIGHT=True
-  FLIPPER_FINGER_HIGH_COOLDOWN_RIGHT=time.time()+FLIPPER_HIGH_MAX
+  FLIPPER_FINGER_HIGH_COOLDOWN_RIGHT=time.time()+FLIPPER_HIGH_MAX_RIGHT
  if (input_state_3 == True and (FLIPPER_FINGER_HIGH_ACTIVE_RIGHT == True or FLIPPER_FINGER_HOLD_ACTIVE_RIGHT == True)):
   # Release right flipper finger completely
   print('Flipper Finger Button right released')
@@ -186,7 +190,7 @@ while True:
   # KICK the left flipper finger hard
   print('Flipper Finger Button left pressed')
   FLIPPER_FINGER_HIGH_ACTIVE_LEFT=True
-  FLIPPER_FINGER_HIGH_COOLDOWN_LEFT=time.time()+FLIPPER_HIGH_MAX
+  FLIPPER_FINGER_HIGH_COOLDOWN_LEFT=time.time()+FLIPPER_HIGH_MAX_LEFT
  if (input_state_5 == True and (FLIPPER_FINGER_HIGH_ACTIVE_LEFT == True or FLIPPER_FINGER_HOLD_ACTIVE_LEFT == True)):
   # Release left flipper finger completely
   print('Flipper Finger Button left released')
@@ -290,6 +294,14 @@ while True:
 
  time.sleep(SLEEP)
 
+ a=a+1
+ if (a % 1000==0):
+  test=time.time()-aa
+  aa=time.time()
+  print ('avg loop time = '+str(test/1000))
+  a=0
+
 GPIO.cleanup()
  
+
 

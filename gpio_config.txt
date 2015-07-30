@@ -16,7 +16,7 @@ PIN	 | LK 	| TYPE 	| Desc
 22	 | 14 	| IN	| Bumper #1 switch
 23	 | 15	| IN	| 
 24	 | 16	| IN 	| 
-26	 | 17	| OUT 	| Bumper #1, coil         (Relay #4,1) IN
+26	 | 17	| OUT 	| 
 29	 | 18	| OUT 	| 
 31	 | 19	| OUT	| 
 32	 | 20	| OUT	| Light #1, shooter alley (Relay #3,1)
@@ -24,5 +24,5 @@ PIN	 | LK 	| TYPE 	| Desc
 35	 | 22	| OUT	| Light #3, bumper        (Relay #3,3)
 36	 | 23	| OUT 	| 
 37	 | 24	| IN 	| Outlane micro switches, one signal!
-38	 | 25 	| IN 	| 
+38	 | 25 	| IN 	| Bumper #1, coil         (Relay #4,1) IN
 40	 | 26	| IN	| 
