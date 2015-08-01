@@ -10,15 +10,22 @@
 # You may obtain a copy of the License at
 # http://www.apache.org/licenses/LICENSE-2.0
 
+import sys
 import time
 import multiprocessing
+import pygame
 import RPi.GPIO as GPIO
 import lights
 import sounds
+import graphics
 import effects
 
 # SCORE
 SCORE=0
+last_score=0
+
+# BALL
+BALL=0
 
 # SLEEP/WAIT TIME FOR LOOP
 SLEEP=0.005
@@ -142,6 +149,9 @@ light_control_3=lights.control(3, False, 150)
 # sound init to play sound
 sound_control=sounds.control(queue, effects.getsoundeffect('startup'))
 
+# graphics init to display stuff
+graphic_control=graphics.control()
+
 print (' ... done')
 
 a=0
@@ -228,12 +238,17 @@ while True:
   light_control_2.seteffect(effects.geteffect('shooter_2'))
   sound_control.playeffect(effects.getsoundeffect('shooter_alley'))
   SHOOTER_ALLEY_COOLDOWN = time.time()+EVENT_COOLDOWN_TIMER
+  BALL=BALL+1
+  if (BALL > 3):
+   BALL=1
+  SCORE=SCORE+100
  if (input_state_37 == False and OUTHOLE_COOLDOWN <= time.time()):
   print('ball out')
   light_control_1.seteffect(effects.geteffect('out_1'))
   light_control_2.seteffect(effects.geteffect('out_1'))
   sound_control.playeffect(effects.getsoundeffect('outlane'))
   OUTHOLE_COOLDOWN = time.time()+EVENT_COOLDOWN_TIMER
+  SCORE=SCORE+1000
 
  # lights and magic
  LIGHT_1_STATUS=light_control_1.getstate()
@@ -301,7 +316,15 @@ while True:
   print ('avg loop time = '+str(test/1000))
   a=0
 
-GPIO.cleanup()
- 
+ if (last_score != SCORE):
+  last_score=SCORE
+  graphic_control.showscore(SCORE) 
+
+ for event in pygame.event.get():
+  if event.type == pygame.KEYDOWN:
+   if event.key == pygame.K_q:
+    GPIO.cleanup()
+    pygame.quit() 
+    sys.exit(0)
 
 
