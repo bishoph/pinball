@@ -28,25 +28,25 @@ e2={
   }
 
 s={
-   'startup': [ 'sounds/alarm_long.mp3' ],
-   'shooter_alley': [ 'sounds/laser_beam.ogg' ],
-   'outlane': [ 'sounds/shutdown.ogg' ],
-   'spinner' : ['sounds/deskbell.ogg' ]
+   'startup': [ '/home/pi/pinball/sounds/alarm_long.mp3' ],
+   'shooter_alley': [ '/home/pi/pinball/sounds/laser_beam.ogg' ],
+   'outlane': [ '/home/pi/pinball/sounds/shutdown.ogg' ],
+   'spinner' : ['/home/pi/pinball/sounds/deskbell.ogg' ]
   }
 
 s2={
-   'spooky': [ 'sounds/spooky.mp3' ],
-   'choir': [ 'sounds/choir.mp3' ],
-   'sorry': [ 'sounds/oh_sorry.mp3' ],
-   'try': [ 'sounds/one_must_try.mp3' ],
-   'giggle': [ 'sounds/giggle.mp3' ],
-   'meh': [ 'sounds/meh.mp3' ],
-   'uuuuhhhh': [ 'sounds/uuuuhhhh.mp3' ],
-   'piano': [ 'sounds/piano.mp3' ],
-   'explosion': [ 'sounds/explosion.mp3' ],
-   'witch': [ 'sounds/witch.mp3' ],
-   'wee_wee': [ 'sounds/wee_wee.mp3' ],
-   'sacrifice': [ 'sounds/sacrifice.mp3' ]
+   'spooky': [ '/home/pi/pinball/sounds/spooky.mp3' ],
+   'choir': [ '/home/pi/pinball/sounds/choir.mp3' ],
+   'sorry': [ '/home/pi/pinball/sounds/oh_sorry.mp3' ],
+   'try': [ '/home/pi/pinball/sounds/one_must_try.mp3' ],
+   'giggle': [ '/home/pi/pinball/sounds/giggle.mp3' ],
+   'meh': [ '/home/pi/pinball/sounds/meh.mp3' ],
+   'uuuuhhhh': [ '/home/pi/pinball/sounds/uuuuhhhh.mp3' ],
+   'piano': [ '/home/pi/pinball/sounds/piano.mp3' ],
+   'explosion': [ '/home/pi/pinball/sounds/explosion.mp3' ],
+   'witch': [ '/home/pi/pinball/sounds/witch.mp3' ],
+   'wee_wee': [ '/home/pi/pinball/sounds/wee_wee.mp3' ],
+   'sacrifice': [ '/home/pi/pinball/sounds/sacrifice.mp3' ]
   }
 
 def geteffect(id):
