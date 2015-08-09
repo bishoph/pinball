@@ -162,11 +162,13 @@ print ('light and sound init ...')
 # light init (ID, default_state, timer_for_random_effects)
 light_control_1=lights.control(1, False, 90)
 light_control_2=lights.control(2, False, 70)
-light_control_3=lights.control(3, False, 150)
-light_control_4=lights.control(4, False, 150)
+light_control_3=lights.control(3, False, 85)
+light_control_4=lights.control(4, False, 83)
 
 # sound init to play sound
 sound_control=sounds.control(queue, effects.getsoundeffect('startup'))
+sound_control.daemon=True
+sound_control.start()
 
 # graphics init to display stuff
 graphic_control=graphics.control()
@@ -244,6 +246,7 @@ while True:
   BUMPER_1_HIGH_COOLDOWN=time.time()+BUMPER_HIGH
   BUMPER_1_COOLDOWN=time.time()+BUMPER_1_COOLDOWN_TIMER
   light_control_3.seteffect(effects.geteffect('bumper'))
+  sound_control.playeffect(effects.getsoundeffect('bumper_1'))
   FX='E'
  if ((input_state_22 == True and BUMPER_1_ACTIVE == True) or (BUMPER_1_HIGH_COOLDOWN > 0 and BUMPER_1_HIGH_COOLDOWN <= time.time())):
   print ('bumper 1 offline')
@@ -257,6 +260,7 @@ while True:
   BUMPER_2_HIGH_COOLDOWN=time.time()+BUMPER_HIGH
   BUMPER_2_COOLDOWN=time.time()+BUMPER_2_COOLDOWN_TIMER
   light_control_4.seteffect(effects.geteffect('bumper'))
+  sound_control.playeffect(effects.getsoundeffect('bumper_2'))
   FX='D'
  if ((input_state_23 == True and BUMPER_2_ACTIVE == True) or (BUMPER_2_HIGH_COOLDOWN > 0 and BUMPER_2_HIGH_COOLDOWN <= time.time())):
   print ('bumper 2 offline')
@@ -393,6 +397,8 @@ while True:
   if event.type == pygame.KEYDOWN:
    if event.key == pygame.K_q:
     GPIO.cleanup()
+    queue.put('stop')
+    sound_control.join()
     pygame.quit() 
     sys.exit(0)
 

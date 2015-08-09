@@ -31,7 +31,9 @@ s={
    'startup': [ '/home/pi/pinball/sounds/alarm_long.mp3' ],
    'shooter_alley': [ '/home/pi/pinball/sounds/laser_beam.ogg' ],
    'outlane': [ '/home/pi/pinball/sounds/shutdown.ogg' ],
-   'spinner' : ['/home/pi/pinball/sounds/deskbell.ogg' ]
+   'spinner' : [ '/home/pi/pinball/sounds/deskbell.ogg' ], 
+   'bumper_1': [ '/home/pi/pinball/sounds/laser_beam2.ogg' ],
+   'bumper_2': [ '/home/pi/pinball/sounds/spring.ogg' ]
   }
 
 s2={

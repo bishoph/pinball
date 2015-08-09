@@ -23,9 +23,10 @@ import random
 
 class control():
 
-    color_fx = [ (255,100,100), (255,0,0), (255,255,0) ]
+    color_fx = [ (255,100,100), (255,0,0), (255,255,0), (154,195,97), (224,200,255), (236,145,197), (255,219,137) ]
     last_fx = ''
     fx_counter = 0
+    fx_color = (255,255,255)
 
     def __init__(self):
      os.putenv('SDL_VIDEODRIVER', 'fbcon')
@@ -44,13 +45,13 @@ class control():
      self.screen.fill((64, 64, 64))
      print (pygame.font.get_fonts())
      self.scorefont = pygame.font.Font("/usr/local/share/fonts/pinball.ttf", 72)
-     self.fxfont = pygame.font.Font("/usr/local/share/fonts/comicfx.ttf", 144)
+     self.fxfont = pygame.font.Font("/usr/local/share/fonts/comicfx.ttf", 192)
      self.change_display()
      pygame.display.update()
 
     def setstate(self, score_current_ball, score, high_score, fx, ball):
       self.counter = self.counter + 1
-      if (self.counter > 100):
+      if (self.counter > 50):
        self.counter = 0
        self.score_current_ball_display = '{0:09d}'.format(score_current_ball)
        self.score_display = '{0:09d}'.format(score)
@@ -58,10 +59,12 @@ class control():
        if (fx != self.last_fx):
         self.fx_display=fx
         self.last_fx=fx
-        self. fx_counter = 0
+        self.fx_counter = 0
+        self.fx_color = random.sample(self.color_fx,1)[0]
        else:
-        self.fx_counter = self.fx_counter + 1
-        if (self.fx_counter < 5):
+        if (self.fx_counter == 10):
+         self.fx_display=self.fx_display.lower()
+        if (self.fx_counter < 15):
          self.fx_counter = self.fx_counter + 1
         else:
          self.fx_display=''
@@ -84,7 +87,7 @@ class control():
        high_score_label = self.scorefont.render(self.high_score_display, 1, (255,255,255))
        self.screen.blit(high_score_label, (60,420))
 
-       fxlabel = self.fxfont.render(self.fx_display, 1, random.sample(self.color_fx,1)[0])
+       fxlabel = self.fxfont.render(self.fx_display, 1, self.fx_color)
        x = random.randint(0, 100)
        y = random.randint(0, 100)
        self.screen.blit(fxlabel, (500+x,100+y))

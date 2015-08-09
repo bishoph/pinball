@@ -33,16 +33,18 @@ class control(multiprocessing.Process):
      pygame.mixer.init()
      self.counter=0
      self.playsound(init_sounds)
-     self.start()
 
     def run(self):
      while self.RUNNING:
       master_process_input = self.queue.get()
+      if (master_process_input == 'quit' or master_process_input == 'exit' or master_process_input == 'stop'):
+       self.stop()
+       break
 
-     self.queue.close()
 
     def stop(self):
      self.RUNNING=False
+     self.queue.close()
 
     def playsound(self, files):
      if (len(files) >= 0):
