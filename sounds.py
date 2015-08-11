@@ -29,23 +29,28 @@ class control(multiprocessing.Process):
     def __init__(self, queue, init_sounds):
      multiprocessing.Process.__init__(self, name="sound control")
      self.queue = queue
-     pygame.init()
-     pygame.mixer.init()
-     self.counter=0
-     self.playsound(init_sounds)
+     self.counter = 0
+     self.init_sounds = init_sounds
 
     def run(self):
+     pygame.init()
+     pygame.mixer.init()
+     self.playsound(self.init_sounds)
      while self.RUNNING:
       master_process_input = self.queue.get()
       if (master_process_input == 'quit' or master_process_input == 'exit' or master_process_input == 'stop'):
        self.stop()
        break
-
+      elif (master_process_input == 'checksilence'):
+       self.checksilence()
+      else:
+       self.playeffect(master_process_input)
 
     def stop(self):
      self.RUNNING=False
      self.queue.close()
 
+    # this is to background music
     def playsound(self, files):
      if (len(files) >= 0):
       pygame.mixer.music.load(files[0])
@@ -63,6 +68,7 @@ class control(multiprocessing.Process):
 
     # this is to play sound effects on top of the background music
     def playeffect(self, effect):
-     print (effect[0])
+     print ('>>> '+effect[0])
      e = pygame.mixer.Sound(effect[0])
+     print (str(e))
      pygame.mixer.Sound.play(e)

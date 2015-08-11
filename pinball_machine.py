@@ -246,7 +246,7 @@ while True:
   BUMPER_1_HIGH_COOLDOWN=time.time()+BUMPER_HIGH
   BUMPER_1_COOLDOWN=time.time()+BUMPER_1_COOLDOWN_TIMER
   light_control_3.seteffect(effects.geteffect('bumper'))
-  sound_control.playeffect(effects.getsoundeffect('bumper_1'))
+  queue.put(effects.getsoundeffect('bumper_1'))
   FX='E'
  if ((input_state_22 == True and BUMPER_1_ACTIVE == True) or (BUMPER_1_HIGH_COOLDOWN > 0 and BUMPER_1_HIGH_COOLDOWN <= time.time())):
   print ('bumper 1 offline')
@@ -260,7 +260,7 @@ while True:
   BUMPER_2_HIGH_COOLDOWN=time.time()+BUMPER_HIGH
   BUMPER_2_COOLDOWN=time.time()+BUMPER_2_COOLDOWN_TIMER
   light_control_4.seteffect(effects.geteffect('bumper'))
-  sound_control.playeffect(effects.getsoundeffect('bumper_2'))
+  queue.put(effects.getsoundeffect('bumper_1'))
   FX='D'
  if ((input_state_23 == True and BUMPER_2_ACTIVE == True) or (BUMPER_2_HIGH_COOLDOWN > 0 and BUMPER_2_HIGH_COOLDOWN <= time.time())):
   print ('bumper 2 offline')
@@ -273,13 +273,13 @@ while True:
   FX='L'
   if (SPINNER_SOUND_COOLDOWN <= time.time()):
    light_control_1.seteffect(effects.geteffect('spinner'))
-   sound_control.playeffect(effects.getsoundeffect('spinner'))
+   queue.put(effects.getsoundeffect('spinner'))
    SPINNER_SOUND_COOLDOWN = time.time()+SPINNER_SOUND_COOLDOWN_TIMER
  if (input_state_16 == False and SHOOTER_ALLEY_COOLDOWN <= time.time()):
   print('shooter alley')
   light_control_1.seteffect(effects.geteffect('shooter_1'))
   light_control_2.seteffect(effects.geteffect('shooter_2'))
-  sound_control.playeffect(effects.getsoundeffect('shooter_alley'))
+  queue.put(effects.getsoundeffect('shooter_alley'))
   SHOOTER_ALLEY_COOLDOWN = time.time()+EVENT_COOLDOWN_TIMER
   SCORE=SCORE+SCORE_CURRENT_BALL
   SCORE_CURRENT_BALL=0
@@ -298,7 +298,7 @@ while True:
   print('ball out')
   light_control_1.seteffect(effects.geteffect('out_1'))
   light_control_2.seteffect(effects.geteffect('out_1'))
-  sound_control.playeffect(effects.getsoundeffect('outlane'))
+  queue.put(effects.getsoundeffect('outlane'))
   OUTHOLE_COOLDOWN = time.time()+EVENT_COOLDOWN_TIMER
   SCORE_CURRENT_BALL=SCORE_CURRENT_BALL+1000
   FX='Q'
@@ -318,7 +318,7 @@ while True:
  LIGHT_3_STATUS=light_control_3.getstate()
  LIGHT_4_STATUS=light_control_4.getstate()
 
- sound_control.checksilence()
+ queue.put('checksilence')
 
  # ##################################
  # stuff gets real below this comment
