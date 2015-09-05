@@ -17,7 +17,8 @@ e={
    'shooter_2': [ 1,1,1,0,0,1,1,1,0,0,1,1,0,0,1,1,0,0,1,1 ],
    'out_1': [ 0,1,0,1,0,1,0,0,1,1,0,0,1,1,1,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,1,0 ],
    'bumper': [ 1,1,1,1,1,1,1,1,1,0,0,0,0,0 ],
-   'spinner': [ 1,0 ]
+   'spinner': [ 1,0 ],
+   'slingshot': [ 1,1,0,0,1,1,0,0,1,1,0,0,1,1 ]
   }
 
 e2={
@@ -33,7 +34,7 @@ s={
    'outlane': [ '/home/pi/pinball/sounds/shutdown.ogg' ],
    'spinner' : [ '/home/pi/pinball/sounds/deskbell.ogg' ], 
    'bumper_1': [ '/home/pi/pinball/sounds/laser_beam2.ogg' ],
-   'bumper_2': [ '/home/pi/pinball/sounds/spring.ogg' ]
+   'slingshot': [ '/home/pi/pinball/sounds/spring.ogg' ],
   }
 
 s2={

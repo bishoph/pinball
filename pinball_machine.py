@@ -10,6 +10,7 @@
 # You may obtain a copy of the License at
 # http://www.apache.org/licenses/LICENSE-2.0
 
+import os
 import sys
 import time
 import multiprocessing
@@ -27,6 +28,7 @@ HIGH_SCORE=0
 
 # BALL
 BALL=0
+NEW_BALL=False
 
 # SLEEP/WAIT TIME FOR LOOP
 SLEEP=0.005
@@ -38,12 +40,12 @@ SLEEP=0.005
 # or other components like Solid State Relays (SSR).
 # For my environment with a FL-11630 0.04-0.06 seconds
 # works pretty well.
-FLIPPER_HIGH_MAX_LEFT=0.05
-FLIPPER_HIGH_MAX_RIGHT=0.05
+FLIPPER_HIGH_MAX_LEFT=0.08
+FLIPPER_HIGH_MAX_RIGHT=0.08
 
 # bumper timeout
 # Value defines the max. time high current flows
-BUMPER_HIGH=0.05
+BUMPER_HIGH=0.08
 
 # Normal event cool down timer, prevents events to be fired
 # continuously when something went mechanically wrong
@@ -61,6 +63,9 @@ BUMPER_2=23
 SPINNER=7
 
 SHOOTER_ALLEY=16
+
+SLINGSHOT=24
+
 OUTHOLE=37
 
 # OUTPUT (GPIO Pin)
@@ -91,6 +96,7 @@ GPIO.setup(BUMPER_2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 GPIO.setup(SPINNER, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(SHOOTER_ALLEY, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(SLINGSHOT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(OUTHOLE, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 # SETTINGS OUT
@@ -144,7 +150,11 @@ SPINNER_SOUND_COOLDOWN=0
 SPINNER_SOUND_COOLDOWN_TIMER=0.3
 
 SHOOTER_ALLEY_COOLDOWN=0
+SLINGSHOT_COOLDOWN=0
+SLINGSHOT_COOLDOWN_TIMER=0.5
 OUTHOLE_COOLDOWN=0
+
+POWER_OFF=0
 
 LIGHT_1_STATUS=False
 LIGHT_2_STATUS=False
@@ -175,8 +185,15 @@ graphic_control=graphics.control()
 
 print (' ... done')
 
-a=0
-aa=time.time()
+loop_counter=0
+loop_timer=time.time()
+
+def shutdown():
+ GPIO.cleanup()
+ queue.put('stop')
+ sound_control.join()
+ pygame.quit()
+ os.system('shutdown now -h')
 
 # this is our main loop and loops forever
 while True:
@@ -196,6 +213,8 @@ while True:
  input_state_7 = GPIO.input(SPINNER)
  # shooter alley
  input_state_16 = GPIO.input(SHOOTER_ALLEY)
+ # slingshot
+ input_state_24 = GPIO.input(SLINGSHOT)
  # outhole
  input_state_37 = GPIO.input(OUTHOLE)
 
@@ -283,6 +302,7 @@ while True:
   SHOOTER_ALLEY_COOLDOWN = time.time()+EVENT_COOLDOWN_TIMER
   SCORE=SCORE+SCORE_CURRENT_BALL
   SCORE_CURRENT_BALL=0
+  NEW_BALL=True
   BALL=BALL+1
   if (BALL == 1):
    SCORE_CURRENT_BALL = 0
@@ -294,23 +314,38 @@ while True:
    BALL=1
    SCORE=0
   SCORE_CURRENT_BALL=SCORE_CURRENT_BALL+100
- if (input_state_37 == False and OUTHOLE_COOLDOWN <= time.time()):
-  print('ball out')
-  light_control_1.seteffect(effects.geteffect('out_1'))
-  light_control_2.seteffect(effects.geteffect('out_1'))
-  queue.put(effects.getsoundeffect('outlane'))
-  OUTHOLE_COOLDOWN = time.time()+EVENT_COOLDOWN_TIMER
-  SCORE_CURRENT_BALL=SCORE_CURRENT_BALL+1000
-  FX='Q'
-  if (BALL == 3):
-   BALL = 0
-   SCORE=SCORE+SCORE_CURRENT_BALL
-   SCORE_CURRENT_BALL=0
-   if (SCORE > HIGH_SCORE):
-    HIGH_SCORE=SCORE
-    # TODO:
-    # SHOW SPECIAL ANIMATION
-    # PLAY HIGH SCORE SOUND AND MAKE LIGHT SHOW !!!!
+ if (input_state_24 == False and SLINGSHOT_COOLDOWN <= time.time()):
+  SCORE_CURRENT_BALL=SCORE_CURRENT_BALL+250
+  light_control_2.seteffect(effects.geteffect('slingshot'))  
+  queue.put(effects.getsoundeffect('slingshot'))
+  SLINGSHOT_COOLDOWN = time.time() + SLINGSHOT_COOLDOWN_TIMER
+  FX='R'
+ if (input_state_37 == False):
+  POWER_OFF = POWER_OFF + 1  
+  if (OUTHOLE_COOLDOWN <= time.time() and NEW_BALL == True):
+   print('ball out')
+   light_control_1.seteffect(effects.geteffect('out_1'))
+   light_control_2.seteffect(effects.geteffect('out_1'))
+   queue.put(effects.getsoundeffect('outlane'))
+   OUTHOLE_COOLDOWN = time.time()+EVENT_COOLDOWN_TIMER
+   FX='Q'
+   SCORE_CURRENT_BALL=SCORE_CURRENT_BALL+1000
+   NEW_BALL=False
+   if (BALL == 3):
+    BALL = 0
+    SCORE=SCORE+SCORE_CURRENT_BALL
+    SCORE_CURRENT_BALL=0
+    if (SCORE > HIGH_SCORE):
+     HIGH_SCORE=SCORE
+     # TODO:
+     # SHOW SPECIAL ANIMATION
+     # PLAY HIGH SCORE SOUND AND MAKE LIGHT SHOW !!!!
+ else:
+  POWER_OFF = 0
+
+ if (POWER_OFF > 1000):
+  print('powering off')
+  shutdown()  
 
  # lights and magic
  LIGHT_1_STATUS=light_control_1.getstate()
@@ -384,12 +419,12 @@ while True:
 
  time.sleep(SLEEP)
 
- a=a+1
- if (a % 1000==0):
-  test=time.time()-aa
-  aa=time.time()
-  print ('avg loop time = '+str(test/1000))
-  a=0
+ loop_counter=loop_counter+1
+ if (loop_counter % 1000==0):
+  avg_loop_time=(time.time()-loop_timer)/1000
+  loop_timer=time.time()
+  print ('avg loop time = '+str(avg_loop_time))
+  loop_counter=0
 
  graphic_control.setstate(SCORE_CURRENT_BALL, SCORE, HIGH_SCORE, FX, BALL) 
 

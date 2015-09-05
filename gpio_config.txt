@@ -15,7 +15,7 @@ PIN	 | LK 	| TYPE 	| Desc
 21	 | 13	| IN	| 
 22	 | 14 	| IN	| Bumper #1 switch
 23	 | 15	| IN	| Bumper #2 switch
-24	 | 16	| IN 	| 
+24	 | 16	| IN 	| Slingshot switch
 26	 | 17	| OUT 	| 
 29	 | 18	| OUT 	| 
 31	 | 19	| OUT	| 
